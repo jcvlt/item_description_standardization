@@ -21,8 +21,8 @@ After:   CBL,WIRE,MIL-W-16878E/1,24#(19/36TA),BLK,OD1.14,ALPHA#1854/19-2
 
 | File | Rows | Description |
 |------|------|-------------|
-| `1_Good.xlsx` | 4,511 | Correctly formatted descriptions (training/reference set) |
-| `2_No_Good.xlsx` | 5,078 | Non-conforming descriptions to be standardized |
+| `data/1.Good.xlsx` | 4,511 | Correctly formatted descriptions (training/reference set) |
+| `data/2.No_Good.xlsx` | 5,078 | Non-conforming descriptions to be standardized |
 
 **Key discovery:** The Good dataset itself contains ~354 descriptions with formatting errors, which required a post-correction step in the search-based methods.
 
@@ -82,6 +82,31 @@ Train a Random Forest classifier to identify the error type in each description,
 
 ---
 
+## Project Outputs
+
+### Output 1 — Before/After Results
+All output Excel files contain a `Results` sheet with:
+- Original Description (before)
+- Standardized Description (after)
+- Status: `AUTO` or `MANUAL REVIEW NEEDED`
+- Confidence/similarity score
+- Correction details
+
+🟢 Green rows = auto-standardized &nbsp;·&nbsp; 🔴 Red rows = manual review needed
+
+### Output 2 — AI-Learned Standard Description Rules
+Only `BM25_RF_Standardized_Output.xlsx` includes Output 2, as it is the best-performing model. It contains a second sheet **"AI-Learned Standard Rules"** with:
+
+| Section | Content |
+|---------|---------|
+| Section 1 | Standard description format — field order, structure, full example |
+| Section 2 | Formatting rules — wrong vs. correct examples |
+| Section 3 | Valid color codes learned from Good data |
+| Section 4 | Top wire standards learned from Good data |
+| Section 5 | 7 ML-learned error classes with F1-scores |
+
+---
+
 ## Installation
 
 ```bash
@@ -107,11 +132,13 @@ Custom paths:
 python <script>.py good.xlsx nogood.xlsx output.xlsx
 ```
 
+Data files are expected in the `data/` folder and outputs are saved to `outputs/` automatically.
+
 ---
 
 ## Output File Columns
 
-### Search-based methods
+### Search-based methods (TF-IDF, Fuzzy, BM25)
 | Column | Description |
 |--------|-------------|
 | No_Good Part# | Original part number |
@@ -123,7 +150,7 @@ python <script>.py good.xlsx nogood.xlsx output.xlsx
 | Match (reference) | Raw match before post-correction |
 | Post-corrections | Formatting fixes applied |
 
-### Classifier methods
+### Classifier methods (TF-IDF + RF, BM25 + RF)
 | Column | Description |
 |--------|-------------|
 | No_Good Part# | Original part number |
@@ -134,27 +161,25 @@ python <script>.py good.xlsx nogood.xlsx output.xlsx
 | Confidence | Classifier confidence (0–1) |
 | Correction Applied | Fix that was applied |
 
-🟢 Green rows = auto-standardized  
-🔴 Red rows = manual review needed
-
 ---
 
 ## Repository Structure
 
 ```
 project/
-├── 1_Good.xlsx
-├── 2_No_Good.xlsx
-├── ml_standardize.py                    # TF-IDF
-├── fuzzy_standardize.py                 # Fuzzy Matching
-├── bm25_standardize.py                  # BM25
-├── classifier_standardize.py            # TF-IDF + Random Forest
-├── bm25_rf_standardize.py               # BM25 + Random Forest ⭐
+├── data/
+│   ├── 1.Good.xlsx                          # Training/reference data
+│   └── 2.No_Good.xlsx                       # Input data to standardize
 ├── outputs/
-│   ├── ML_Standardized_Output.xlsx
-│   ├── Fuzzy_Standardized_Output.xlsx
-│   ├── BM25_Standardized_Output.xlsx
-│   ├── Classifier_Standardized_Output.xlsx
-│   └── BM25_RF_Standardized_Output.xlsx
+│   ├── ML_Standardized_Output.xlsx          # TF-IDF results
+│   ├── Fuzzy_Standardized_Output.xlsx       # Fuzzy Matching results
+│   ├── BM25_Standardized_Output.xlsx        # BM25 results
+│   ├── Classifier_Standardized_Output.xlsx  # TF-IDF + Random Forest results
+│   └── BM25_RF_Standardized_Output.xlsx     # BM25 + Random Forest results (includes Output 2)
+├── ml_standardize.py                        # Method 1: TF-IDF
+├── fuzzy_standardize.py                     # Method 2: Fuzzy Matching
+├── bm25_standardize.py                      # Method 3: BM25
+├── classifier_standardize.py                # Method 4: TF-IDF + Random Forest
+├── bm25_rf_standardize.py                   # Method 5: BM25 + Random Forest
 └── README.md
 ```
