@@ -43,8 +43,7 @@ COLOR_PAT = "|".join(re.escape(c) for c in COLOR_TOKENS)
 
 def fix_fullwidth(s):
     return (s.replace("\uff0c",",").replace("\uff08","(")
-             .replace("\uff09",")").replace("\u3000"," ")
-             .replace("\uff0c",",").replace("\uff08","(").replace("\uff09",")"))
+             .replace("\uff09",")").replace("\u3000"," "))
 
 def fix_comma_before_color(s):
     return re.sub(r'\)(' + COLOR_PAT + r')([,\s]|$)',

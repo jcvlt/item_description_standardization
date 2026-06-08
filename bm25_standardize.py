@@ -76,7 +76,6 @@ def post_correct(desc):
 # ── MAIN ──────────────────────────────────────────────────────────────────────
 def main(good_path, nogood_path, output_path):
 
-    import os
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     print("Loading data...")

@@ -147,7 +147,6 @@ def apply_correction(desc: str, predicted_error: str) -> tuple[str, str]:
 # MAIN 
 def main(good_path, nogood_path, output_path):
 
-    import os
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     print("Loading data...")
