@@ -17,8 +17,7 @@ SIMILARITY_THRESHOLD = 0.60    # A score >= 60% of the max possible score is a c
 def tokenize(text):
     text = str(text).upper().strip()
     text = (text.replace("\uff0c", ",").replace("\uff08", "(")
-                .replace("\uff09", ")").replace("\u3000", " ")
-                .replace("\uff0c", ",").replace("\uff08", "(").replace("\uff09", ")"))
+                .replace("\uff09", ")").replace("\u3000", " "))
     tokens = re.split(r"[,\s#/()\-]+", text)
     return [t for t in tokens if t]
 
